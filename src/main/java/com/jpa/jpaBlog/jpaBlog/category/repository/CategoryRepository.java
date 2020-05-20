@@ -1,0 +1,7 @@
+package com.jpa.jpaBlog.jpaBlog.category.repository;
+
+import com.jpa.jpaBlog.jpaBlog.category.entity.Category;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CategoryRepository extends JpaRepository<Category, Long> {
+}
