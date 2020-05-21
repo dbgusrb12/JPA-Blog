@@ -1,4 +1,4 @@
--- INSERT INTO category(ID, NAME, REG_DATE) VALUES(1, 'spring', CURRENT_TIMESTAMP());
--- INSERT INTO category(ID, NAME, REG_DATE) VALUES(2, 'java', CURRENT_TIMESTAMP());
---
--- INSERT INTO post(ID, TITLE, CODE, CONTENT, STATUS, REG_DATE, CATEGORY_ID) VALUES(1, '테스트', '지금 포스팅은 테스트 포스팅 입니다.', '지금 포스팅은 테스트 포스팅 입니다.', 'Y', CURRENT_TIMESTAMP(), 1);
+INSERT INTO category(ID, NAME, REG_DATE) VALUES(1, 'spring', CURRENT_TIMESTAMP());
+INSERT INTO category(ID, NAME, REG_DATE) VALUES(2, 'java', CURRENT_TIMESTAMP());
+
+INSERT INTO post(ID, TITLE, CODE, CONTENT, STATUS, REG_DATE, CATEGORY_ID) VALUES(1, '테스트', '지금 포스팅은 테스트 포스팅 입니다.', '지금 포스팅은 테스트 포스팅 입니다.', 'Y', CURRENT_TIMESTAMP(), 1);
