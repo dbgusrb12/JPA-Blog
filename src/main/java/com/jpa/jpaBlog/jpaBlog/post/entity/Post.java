@@ -27,7 +27,7 @@ public class Post {
     @Lob
     private String code;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private PostStatus status;
 
     private LocalDateTime regDate;
