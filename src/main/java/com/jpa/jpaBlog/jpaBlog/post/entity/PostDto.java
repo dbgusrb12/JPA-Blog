@@ -19,7 +19,7 @@ public class PostDto {
     private String code;
 
     @NotNull
-    private Long CategoryId;
+    private Long categoryId;
 
     private String categoryName;
 }

@@ -1,9 +1,11 @@
 package com.jpa.jpaBlog.jpaBlog.comment.controller;
 
+import com.jpa.jpaBlog.core.exception.NotFoundException;
 import com.jpa.jpaBlog.jpaBlog.comment.entity.Comment;
 import com.jpa.jpaBlog.jpaBlog.comment.entity.CommentDto;
 import com.jpa.jpaBlog.jpaBlog.comment.service.CommentService;
 import com.jpa.jpaBlog.jpaBlog.post.entity.Post;
+import com.jpa.jpaBlog.jpaBlog.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +22,12 @@ import javax.validation.Valid;
 @RequestMapping(value = "/comments")
 public class CommentController {
     private final CommentService commentService;
+    private final PostRepository postRepository;
+
+    @ModelAttribute
+    public Post post(@ModelAttribute CommentDto commentDto){
+        return postRepository.findById(commentDto.getPostId()).orElseThrow(() -> new NotFoundException(commentDto.getPostId() + "not found"));
+    }
 
     @PostMapping
     public String createComment(@ModelAttribute @Valid CommentDto commentDto, BindingResult bindingResult, Model model) {

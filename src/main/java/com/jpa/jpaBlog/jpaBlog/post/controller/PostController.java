@@ -1,8 +1,11 @@
 package com.jpa.jpaBlog.jpaBlog.post.controller;
 
+import com.jpa.jpaBlog.core.config.Navigation;
+import com.jpa.jpaBlog.core.config.Section;
 import com.jpa.jpaBlog.core.exception.NotFoundException;
 import com.jpa.jpaBlog.jpaBlog.category.entity.Category;
 import com.jpa.jpaBlog.jpaBlog.category.service.CategoryService;
+import com.jpa.jpaBlog.jpaBlog.comment.entity.CommentDto;
 import com.jpa.jpaBlog.jpaBlog.post.entity.Post;
 import com.jpa.jpaBlog.jpaBlog.post.entity.PostDto;
 import com.jpa.jpaBlog.jpaBlog.post.entity.PostStatus;
@@ -19,6 +22,7 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping(value = "/posts")
+@Navigation(Section.POST)
 public class PostController {
 
     private final PostService postService;
@@ -30,7 +34,7 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public String findByPost(@PathVariable Long id, Model model) {
+    public String findByPost(@PathVariable Long id, Model model, @ModelAttribute CommentDto commentDto) {
         Post post = postService.findByIdAndStatus(id, PostStatus.Y);
         if (post == null) {
             throw new NotFoundException(id + " not found");

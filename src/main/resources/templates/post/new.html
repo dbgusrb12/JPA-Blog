@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>포스트</title>
+    <title>Post</title>
     <script th:src="@{/markdown/js/markdown-it.js}"></script>
     <script th:src="@{/markdown/js/markdown-it-footnote.js}"></script>
     <script th:src="@{/markdown/js/highlight.pack.js}"></script>
@@ -34,7 +34,7 @@
                 <label class="col-lg-2 control-label">categories</label>
                 <div class="btn-group" data-toggle="buttons" th:each="category : ${categories}">
                     <label class="btn btn-primary active">
-                        <input th:onclick="'changeCategory(\'' + ${category.name} + '\')'" name="categoryId" type="radio" th:text="${category.name}" th:value="${category.id}" />
+                        <input th:onclick="changeCategory([[${category.name}]])" name="categoryId" type="radio" th:text="${category.name}" th:value="${category.id}" />
                     </label>
                 </div>
                 <span class="help-block" style="text-align: center;" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}">Incorrect title</span>
