@@ -1,6 +1,7 @@
 package com.jpa.jpaBlog.jpaBlog.comment.entity;
 
 import com.jpa.jpaBlog.jpaBlog.post.entity.Post;
+import com.jpa.jpaBlog.jpaBlog.user.entity.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -25,6 +26,10 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_ID")
     private Post post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID")
+    private User user;
 
     public Comment(){
 

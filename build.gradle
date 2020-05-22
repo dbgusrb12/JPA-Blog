@@ -28,10 +28,18 @@ dependencies {
 	compile group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '2.3.0'
 	compile group: 'io.github.jpenren', name: 'thymeleaf-spring-data-dialect', version: '3.4.0'
 
+	// 스프링 부트 시큐리티
+	implementation 'org.springframework.cloud:spring-cloud-starter-security:2.1.2.RELEASE'
+	implementation 'org.springframework.cloud:spring-cloud-starter-oauth2:2.1.2.RELEASE'
+
+
+
 	// 캐시 디펜던시
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
-	implementation 'javax.cache:cache-api'
-	implementation 'org.ehcache:ehcache'
+
+	// EhCache 캐시
+//	implementation 'javax.cache:cache-api'
+//	implementation 'org.ehcache:ehcache'
 
 	// infinispan 캐시
 //	implementation 'org.infinispan:infinispan-spring4-embedded'
@@ -45,8 +53,8 @@ dependencies {
 //	implementation 'org.apache.ignite:ignite-core'
 
 	// caffeine 캐시
-//	implementation 'com.github.ben-manes.caffeine:caffeine'
-//	implementation 'com.github.ben-manes.caffeine:jcache'
+	implementation 'com.github.ben-manes.caffeine:caffeine'
+	implementation 'com.github.ben-manes.caffeine:jcache'
 
 //	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	compileOnly 'org.projectlombok:lombok'
