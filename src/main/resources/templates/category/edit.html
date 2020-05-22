@@ -2,12 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="layouts/main">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
     <title>Category</title>
+    <script type="text/javascript" th:inline="javascript">
+        function deleteCategory(categoryId){
+            document.getElementById("category").action = "/categories/" + categoryId + "/delete";
+            document.getElementById("category").submit();
+        }
+    </script>
 </head>
 <body>
     <div class="container" layout:fragment="content">
@@ -28,12 +29,6 @@
                 </div>
             </fieldset>
         </form>
-        <script type="text/javascript" th:inline="javascript">
-            function deleteCategory(categoryId){
-                document.getElementById("category").action = "/categories/" + categoryId + "/delete";
-                document.getElementById("category").submit();
-            }
-        </script>
     </div>
 </body>
 </html>

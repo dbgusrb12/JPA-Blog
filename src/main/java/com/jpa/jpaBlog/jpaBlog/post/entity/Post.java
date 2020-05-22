@@ -3,6 +3,8 @@ package com.jpa.jpaBlog.jpaBlog.post.entity;
 import com.jpa.jpaBlog.jpaBlog.category.entity.Category;
 import com.jpa.jpaBlog.jpaBlog.comment.entity.Comment;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -11,6 +13,8 @@ import java.util.List;
 
 @Data
 @Entity
+@ToString(exclude = {"category", "comments"})
+@EqualsAndHashCode(exclude = {"category", "comments"})
 public class Post {
 
     @Id

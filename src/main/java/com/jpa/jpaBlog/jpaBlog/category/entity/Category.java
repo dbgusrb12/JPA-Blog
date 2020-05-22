@@ -2,15 +2,20 @@ package com.jpa.jpaBlog.jpaBlog.category.entity;
 
 import com.jpa.jpaBlog.jpaBlog.post.entity.Post;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @Entity
-public class Category {
+@ToString(exclude = {"post"})
+@EqualsAndHashCode(exclude = {"post"})
+public class Category implements Serializable {
 
     @Id
     @GeneratedValue

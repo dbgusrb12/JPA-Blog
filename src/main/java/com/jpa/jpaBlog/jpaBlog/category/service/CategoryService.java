@@ -4,6 +4,8 @@ import com.jpa.jpaBlog.core.exception.NotFoundException;
 import com.jpa.jpaBlog.jpaBlog.category.entity.Category;
 import com.jpa.jpaBlog.jpaBlog.category.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
@@ -35,7 +38,9 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable("blog.category")
     public Page<Category> findAll(Pageable pageable){
+        log.info("blog.category cache");
         return categoryRepository.findAll(pageable);
     }
 

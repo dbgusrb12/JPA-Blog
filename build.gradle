@@ -21,13 +21,32 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
+	// thymeleaf , layout, paging 처리 디펜던시
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	compile group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '2.3.0'
 	compile group: 'io.github.jpenren', name: 'thymeleaf-spring-data-dialect', version: '3.4.0'
 
+	// 캐시 디펜던시
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
+	implementation 'javax.cache:cache-api'
+	implementation 'org.ehcache:ehcache'
 
+	// infinispan 캐시
+//	implementation 'org.infinispan:infinispan-spring4-embedded'
+//	implementation 'org.infinispan:infinispan-jcache'
+
+	// hazelcast 캐시
+//	implementation 'com.hazelcast:hazelcast'
+//	implementation 'com.hazelcast:hazelcast-spring'
+
+	// apache.ignite 캐시
+//	implementation 'org.apache.ignite:ignite-core'
+
+	// caffeine 캐시
+//	implementation 'com.github.ben-manes.caffeine:caffeine'
+//	implementation 'com.github.ben-manes.caffeine:jcache'
 
 //	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	compileOnly 'org.projectlombok:lombok'
