@@ -6,7 +6,9 @@ import com.jpa.jpaBlog.jpaBlog.comment.entity.CommentDto;
 import com.jpa.jpaBlog.jpaBlog.comment.service.CommentService;
 import com.jpa.jpaBlog.jpaBlog.post.entity.Post;
 import com.jpa.jpaBlog.jpaBlog.post.repository.PostRepository;
+import com.jpa.jpaBlog.jpaBlog.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,18 +32,14 @@ public class CommentController {
     }
 
     @PostMapping
-    public String createComment(@ModelAttribute @Valid CommentDto commentDto, BindingResult bindingResult, Model model) {
+    public String createComment(@ModelAttribute @Valid CommentDto commentDto, BindingResult bindingResult, Model model, @AuthenticationPrincipal User user) {
         if(bindingResult.hasErrors()){
             return "post/post";
         }
         model.addAttribute("comment",
                 commentService.createComment(
-                        new Comment(
-                                commentDto.getContent(),
-                                new Post(
-                                        commentDto.getPostId()
-                                )
-                        )
+                        new Comment(commentDto.getContent(),
+                                new Post(commentDto.getPostId()), user)
                 )
         );
         return "redirect:/posts/" + commentDto.getPostId();

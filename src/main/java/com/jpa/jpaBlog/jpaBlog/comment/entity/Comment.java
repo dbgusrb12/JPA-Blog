@@ -35,9 +35,10 @@ public class Comment {
 
     }
 
-    public Comment(String content, Post post){
+    public Comment(String content, Post post, User user){
         this.content = content;
         this.post = post;
+        this.user = user;
     }
 
 }

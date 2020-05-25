@@ -10,7 +10,9 @@ import com.jpa.jpaBlog.jpaBlog.post.entity.Post;
 import com.jpa.jpaBlog.jpaBlog.post.entity.PostDto;
 import com.jpa.jpaBlog.jpaBlog.post.entity.PostStatus;
 import com.jpa.jpaBlog.jpaBlog.post.service.PostService;
+import com.jpa.jpaBlog.jpaBlog.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -66,7 +68,7 @@ public class PostController {
     }
 
     @PostMapping
-    public String createPost(@ModelAttribute @Valid PostDto createPost, BindingResult bindingResult, Model model) {
+    public String createPost(@ModelAttribute @Valid PostDto createPost, BindingResult bindingResult, Model model, @AuthenticationPrincipal User user) {
         if (bindingResult.hasErrors()) {
             return "post/new";
         }
@@ -74,14 +76,15 @@ public class PostController {
                 createPost.getContent(),
                 createPost.getCode(),
                 PostStatus.Y,
-                new Category(createPost.getCategoryId()));
+                new Category(createPost.getCategoryId()),
+                user);
         Post newPost = postService.createPost(post);
         model.addAttribute("post", newPost);
         return "redirect:/posts/" + newPost.getId();
     }
 
     @PostMapping("/{id}/edit")
-    public String modifyPost(@PathVariable Long id, @ModelAttribute("editPost") @Valid PostDto createPost, BindingResult bindingResult) {
+    public String modifyPost(@PathVariable Long id, @ModelAttribute("editPost") @Valid PostDto createPost, BindingResult bindingResult, @AuthenticationPrincipal User user) {
         if (bindingResult.hasErrors()) {
             return "post/edit";
         }
@@ -90,8 +93,9 @@ public class PostController {
                 createPost.getContent(),
                 createPost.getCode(),
                 PostStatus.Y,
-                new Category(createPost.getCategoryId())
-        ));
+                new Category(createPost.getCategoryId()),
+                user)
+        );
         return "redirect:/posts/" + id;
     }
 

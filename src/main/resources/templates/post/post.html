@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorator="layouts/main" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <head>
@@ -15,7 +16,7 @@
 
 <body>
     <div class="container" layout:fragment="content">
-        <ul class="pager">
+        <ul class="pager" sec:authorize="hasRole('ROLE_ADMIN')">
             <li class="next">
                 <a th:href="@{'/posts/edit/' + ${post.id}}">edit</a>
             </li>
@@ -31,7 +32,7 @@
                 <h4 id="addComment">Leave a Comment:</h4>
                 <form th:action="@{/comments}" th:object="${commentDto}" method="post" th:id="comment">
                     <input type="hidden" th:value="${post.id}" id="postId" name="postId" />
-                    <div class="well" th:classappend="(${#fields.hasErrors('content')} ? ' has-error')">
+                    <div class="well" sec:authorize="hasRole('ROLE_USER')" th:classappend="(${#fields.hasErrors('content')} ? ' has-error')">
                         <input type="text" class="form-control input-lg" id="content" name="content" placeholder="content" />
                         <span class="help-block" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></span>
                         <ul class="pager" style="text-align:right;">

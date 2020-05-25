@@ -75,12 +75,13 @@ public class Post {
         this.status = status;
     }
 
-    public Post(String title, String content, String code, PostStatus status, Category category){
+    public Post(String title, String content, String code, PostStatus status, Category category, User user){
         this.title = title;
         this.content = content;
         this.code = code;
         this.status = status;
         this.category = category;
+        this.user = user;
     }
 
 }

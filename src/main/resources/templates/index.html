@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sd="http://www.thymeleaf.org/spring-data"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorator="layouts/main" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <head>
@@ -9,7 +10,7 @@
     <!-- Main Content -->
     <div class="container" layout:fragment="content">
         <div class="row">
-            <ul class="pager" >
+            <ul class="pager" sec:authorize="hasRole('ROLE_ADMIN')">
                 <li class="next">
                     <a th:href="@{/posts/new}">write</a>
                 </li>
