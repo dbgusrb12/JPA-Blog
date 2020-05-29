@@ -41,7 +41,7 @@ public class GithubClient {
         try {
             return RequestEntity.get(new URI(url)).accept(MediaType.APPLICATION_JSON).build();
         }catch (URISyntaxException ex) {
-            throw new IllegalStateException("Invaild URL " + url, ex);
+            throw new IllegalStateException("Invalid URL " + url, ex);
         }
     }
 }

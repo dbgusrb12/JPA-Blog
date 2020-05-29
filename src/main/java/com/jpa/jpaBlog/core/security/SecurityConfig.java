@@ -31,8 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/posts/{id}").permitAll()
                 .antMatchers("/posts/**").hasRole("ADMIN")
                 .antMatchers("/categories/**").hasRole("ADMIN")
-                .antMatchers( "/h2-console/**").permitAll()
-                .antMatchers("/", "/js/**", "/vendor/**", "/codemirror/**", "markdown/**", "/login/**", "/css/**", "/img/**", "/webjars/**").permitAll()
+                .antMatchers("/", "/js/**", "/vendor/**", "/codemirror/**", "/markdown/**", "/login/**", "/css/**", "/img/**", "/webjars/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .csrf()
@@ -47,8 +46,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .headers()
                 .frameOptions().sameOrigin();
-        http.csrf().disable();
-        http.headers().frameOptions().disable();
+//                .antMatchers( "/h2-console/**").permitAll()
+//        http.csrf().disable();
+//        http.headers().frameOptions().disable();
     }
 
     @Bean
