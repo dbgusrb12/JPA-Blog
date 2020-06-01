@@ -5,7 +5,6 @@ import com.jpa.jpaBlog.jpaBlog.category.entity.Category;
 import com.jpa.jpaBlog.jpaBlog.category.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -38,9 +37,9 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable("blog.category")
+//    @Cacheable("blog.category")
     public Page<Category> findAll(Pageable pageable){
-        log.info("blog.category cache");
+//        log.info("blog.category cache");
         return categoryRepository.findAll(pageable);
     }
 
