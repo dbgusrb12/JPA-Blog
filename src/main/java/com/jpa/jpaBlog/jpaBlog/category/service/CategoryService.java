@@ -2,6 +2,7 @@ package com.jpa.jpaBlog.jpaBlog.category.service;
 
 import com.jpa.jpaBlog.core.exception.NotFoundException;
 import com.jpa.jpaBlog.jpaBlog.category.entity.Category;
+import com.jpa.jpaBlog.jpaBlog.category.entity.CategoryDto;
 import com.jpa.jpaBlog.jpaBlog.category.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,8 +22,11 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    public Category createCategory(Category category){
-        category.setRegDate(LocalDateTime.now());
+    public Category createCategory(CategoryDto categoryDto){
+        Category category = Category.builder()
+                .name(categoryDto.getName())
+                .regDate(LocalDateTime.now())
+                .build();
         return categoryRepository.save(category);
     }
 
@@ -30,10 +34,9 @@ public class CategoryService {
         categoryRepository.deleteById(id);
     }
 
-    public void updateCategory(Category category){
-        Category oldCategory = categoryRepository.findById(category.getId()).orElseThrow(() -> new NotFoundException(category.getId() + " not found"));
-
-        oldCategory.setName(category.getName());
+    public void updateCategory(CategoryDto categoryDto){
+        Category oldCategory = categoryRepository.findById(categoryDto.getId()).orElseThrow(() -> new NotFoundException(categoryDto.getId() + " not found"));
+        oldCategory.updateCategory(categoryDto);
     }
 
     @Transactional(readOnly = true)

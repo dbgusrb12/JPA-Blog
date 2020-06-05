@@ -3,16 +3,15 @@ package com.jpa.jpaBlog.jpaBlog.post.entity;
 import com.jpa.jpaBlog.jpaBlog.category.entity.Category;
 import com.jpa.jpaBlog.jpaBlog.comment.entity.Comment;
 import com.jpa.jpaBlog.jpaBlog.user.entity.User;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @ToString(exclude = {"category", "comments"})
 @EqualsAndHashCode(exclude = {"category", "comments"})
@@ -48,40 +47,31 @@ public class Post {
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    public Post(){
-    }
 
-    public Post(Long id){
-        this.id = id;
-    }
-
-    public Post(String title, PostStatus status){
-        this.title = title;
-        this.status = status;
-    }
-
-    public Post(Long id, String title, String content, String code, PostStatus status){
+    @Builder
+    public Post(Long id, String title, String content, String code, PostStatus status, LocalDateTime regDate, Category category, List<Comment> comments, User user) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.code = code;
         this.status = status;
-    }
-
-    public Post(String title, String content, String code, PostStatus status){
-        this.title = title;
-        this.content = content;
-        this.code = code;
-        this.status = status;
-    }
-
-    public Post(String title, String content, String code, PostStatus status, Category category, User user){
-        this.title = title;
-        this.content = content;
-        this.code = code;
-        this.status = status;
+        this.regDate = regDate;
         this.category = category;
+        this.comments = comments;
         this.user = user;
     }
 
+    public void updatePost(PostDto post, User user) {
+        this.content = post.getContent();
+        this.code = post.getCode();
+        this.title = post.getTitle();
+        this.category = Category.builder()
+                .id(post.getCategoryId())
+                .build();
+        this.user = user;
+    }
+
+    public void deletePost() {
+        this.status = PostStatus.N;
+    }
 }

@@ -2,14 +2,13 @@ package com.jpa.jpaBlog.jpaBlog.comment.entity;
 
 import com.jpa.jpaBlog.jpaBlog.post.entity.Post;
 import com.jpa.jpaBlog.jpaBlog.user.entity.User;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @ToString(exclude = {"post"})
 @EqualsAndHashCode(exclude = {"post"})
@@ -31,12 +30,11 @@ public class Comment {
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    public Comment(){
-
-    }
-
-    public Comment(String content, Post post, User user){
+    @Builder
+    public Comment(Long id, String content, LocalDateTime regDate, Post post, User user) {
+        this.id = id;
         this.content = content;
+        this.regDate = regDate;
         this.post = post;
         this.user = user;
     }

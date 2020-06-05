@@ -36,12 +36,8 @@ public class CommentController {
         if(bindingResult.hasErrors()){
             return "post/post";
         }
-        model.addAttribute("comment",
-                commentService.createComment(
-                        new Comment(commentDto.getContent(),
-                                new Post(commentDto.getPostId()), user)
-                )
-        );
+        Comment comment = commentService.createComment(commentDto, user);
+        model.addAttribute("comment", comment);
         return "redirect:/posts/" + commentDto.getPostId();
     }
 

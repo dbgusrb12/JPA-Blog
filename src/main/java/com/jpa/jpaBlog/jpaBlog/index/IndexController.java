@@ -27,7 +27,11 @@ public class IndexController {
 
     @GetMapping("/")
     public String home(@RequestParam(required = false) String q, Model model, @PageableDefault(size = 5, sort = "regDate", direction = Sort.Direction.DESC) Pageable pageable){
-        Example<Post> post = Example.of(new Post(q, PostStatus.Y),
+        Example<Post> post = Example.of(
+                Post.builder()
+                        .title(q)
+                        .status(PostStatus.Y)
+                        .build(),
                 matching()
                         .withMatcher("title", ExampleMatcher.GenericPropertyMatcher::contains));
         model.addAttribute("posts", postRepository.findAll(post, pageable));

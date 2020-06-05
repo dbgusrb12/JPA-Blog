@@ -2,7 +2,6 @@ package com.jpa.jpaBlog.jpaBlog.category.controller;
 
 import com.jpa.jpaBlog.core.config.Navigation;
 import com.jpa.jpaBlog.core.config.Section;
-import com.jpa.jpaBlog.jpaBlog.category.entity.Category;
 import com.jpa.jpaBlog.jpaBlog.category.entity.CategoryDto;
 import com.jpa.jpaBlog.jpaBlog.category.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +43,7 @@ public class CategoryController {
         if(bindingResult.hasErrors()){
             return "category/new";
         }
-        categoryService.createCategory(new Category(categoryDto.getId(), categoryDto.getName()));
+        categoryService.createCategory(categoryDto);
         return "redirect:/categories";
     }
 
@@ -53,7 +52,8 @@ public class CategoryController {
         if(bindingResult.hasErrors()){
             return "category/edit";
         }
-        categoryService.updateCategory(new Category(id, categoryDto.getName()));
+        categoryDto.setId(id);
+        categoryService.updateCategory(categoryDto);
         return "redirect:/categories";
     }
 

@@ -16,6 +16,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.util.ObjectUtils;
 
 @Configuration
 @EnableOAuth2Sso
@@ -68,10 +69,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return map -> {
             String githubLogin = (String) map.get("login");
             User loginUser = userRepository.findByGithub(githubLogin);
-            if(loginUser == null) {
+            if(ObjectUtils.isEmpty(loginUser)) {
                 logger.info("Initialize user with githubId {}", githubLogin);
                 GithubUser user = githubClient.getUser(githubLogin);
-                loginUser = new User(user.getEmail(), user.getName(), githubLogin, user.getAvatar());
+                loginUser = User.builder()
+                        .email(user.getEmail())
+                        .name(user.getName())
+                        .github(githubLogin)
+                        .avatarUrl(user.getAvatar())
+                        .build();
                 userRepository.save(loginUser);
             }
             return loginUser;

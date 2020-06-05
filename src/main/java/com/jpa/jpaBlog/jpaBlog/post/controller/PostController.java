@@ -2,7 +2,6 @@ package com.jpa.jpaBlog.jpaBlog.post.controller;
 
 import com.jpa.jpaBlog.core.config.Navigation;
 import com.jpa.jpaBlog.core.config.Section;
-import com.jpa.jpaBlog.core.exception.NotFoundException;
 import com.jpa.jpaBlog.jpaBlog.category.entity.Category;
 import com.jpa.jpaBlog.jpaBlog.category.service.CategoryService;
 import com.jpa.jpaBlog.jpaBlog.comment.entity.CommentDto;
@@ -38,9 +37,6 @@ public class PostController {
     @GetMapping("/{id}")
     public String findByPost(@PathVariable Long id, Model model, @ModelAttribute CommentDto commentDto) {
         Post post = postService.findByIdAndStatus(id, PostStatus.Y);
-        if (post == null) {
-            throw new NotFoundException(id + " not found");
-        }
         model.addAttribute("post", post);
         return "post/post";
     }
@@ -53,16 +49,16 @@ public class PostController {
     @GetMapping("/edit/{id}")
     public String editPost(@PathVariable Long id, Model model) {
         Post post = postService.findByIdAndStatus(id, PostStatus.Y);
-        if (post == null) {
-            throw new NotFoundException(id + " not found");
-        }
-        PostDto createPost = new PostDto();
-        createPost.setCategoryId(post.getCategory().getId());
-        createPost.setCategoryName(post.getCategory().getName());
-        createPost.setTitle(post.getTitle());
-        createPost.setCode(post.getCode());
-        createPost.setContent(post.getContent());
-        createPost.setId(id);
+
+        PostDto createPost = PostDto.builder()
+                .categoryId(post.getCategory().getId())
+                .categoryName(post.getCategory().getName())
+                .title(post.getTitle())
+                .code(post.getCode())
+                .content(post.getContent())
+                .id(post.getId())
+                .build();
+
         model.addAttribute("editPost", createPost);
         return "post/edit";
     }
@@ -72,13 +68,8 @@ public class PostController {
         if (bindingResult.hasErrors()) {
             return "post/new";
         }
-        Post post = new Post(createPost.getTitle(),
-                createPost.getContent(),
-                createPost.getCode(),
-                PostStatus.Y,
-                new Category(createPost.getCategoryId()),
-                user);
-        Post newPost = postService.createPost(post);
+
+        Post newPost = postService.createPost(createPost, user);
         model.addAttribute("post", newPost);
         return "redirect:/posts/" + newPost.getId();
     }
@@ -88,14 +79,8 @@ public class PostController {
         if (bindingResult.hasErrors()) {
             return "post/edit";
         }
-        postService.updatePost(id, new Post(
-                createPost.getTitle(),
-                createPost.getContent(),
-                createPost.getCode(),
-                PostStatus.Y,
-                new Category(createPost.getCategoryId()),
-                user)
-        );
+        createPost.setId(id);
+        postService.updatePost(createPost, user);
         return "redirect:/posts/" + id;
     }
 
