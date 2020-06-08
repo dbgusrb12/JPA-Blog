@@ -1,6 +1,7 @@
 package com.jpa.jpaBlog.jpaBlog.comment;
 
 import com.jpa.jpaBlog.jpaBlog.comment.entity.Comment;
+import com.jpa.jpaBlog.jpaBlog.comment.entity.CommentDto;
 import com.jpa.jpaBlog.jpaBlog.comment.service.CommentService;
 import com.jpa.jpaBlog.jpaBlog.post.entity.Post;
 import org.junit.Test;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.anyObject;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -31,11 +33,16 @@ public class CommentControllerTest {
 
     @Test
     public void createComment() throws Exception {
-        Comment comment = new Comment();
-        comment.setId(1L);
-        comment.setContent("test");
-        comment.setPost(new Post(1L));
-        given(commentService.createComment(comment)).willReturn(comment);
+        CommentDto commentDto = CommentDto.builder()
+                .postId(1L)
+                .content("test")
+                .build();
+        Comment comment = Comment.builder()
+                .id(1L)
+                .content("test")
+                .post(Post.builder().id(1L).build())
+                .build();
+        given(commentService.createComment(commentDto, anyObject())).willReturn(comment);
 
         this.mvc.perform(post("/comments")
                 .param("postId", "1")

@@ -38,11 +38,12 @@ public class PostControllerTest {
         given(this.postService.findByIdAndStatus(
                 anyLong(),
                 anyObject())).willReturn(
-                        new Post(
-                                "제목",
-                                "컨텐츠",
-                                "마크다운",
-                                PostStatus.Y)
+                        Post.builder()
+                                .title("제목")
+                                .content("컨텐츠")
+                                .code("마크다운")
+                                .status(PostStatus.Y)
+                                .build()
         );
         MvcResult mvcResult = this.mvc.perform(get("/posts/{id}", 1))
                 .andExpect(status().isOk())
@@ -67,7 +68,12 @@ public class PostControllerTest {
     public void editPost() throws Exception {
         given(this.postService.findByIdAndStatus(anyLong(), anyObject()))
                 .willReturn(
-                        new Post("제목",  "컨텐츠", "마크다운", PostStatus.Y)
+                        Post.builder()
+                                .title("제목")
+                                .content("컨텐츠")
+                                .code("마크다운")
+                                .status(PostStatus.Y)
+                                .build()
                 );
         MvcResult mvcResult = this.mvc.perform(get("/posts/edit/{id}", 1))
                 .andExpect(status().isOk())
@@ -84,11 +90,12 @@ public class PostControllerTest {
         given(this.postService.findByIdAndStatus(
                 1L,
                 PostStatus.Y)).willReturn(
-                        new Post(
-                                "제목",
-                                "컨텐츠",
-                                "마크다운",
-                                PostStatus.Y)
+                        Post.builder()
+                            .title("제목")
+                            .content("컨텐츠")
+                            .code("마크다운")
+                            .status(PostStatus.Y)
+                            .build()
         );
         this.mvc.perform(get("/posts/edit/{id}", 2))
                 .andExpect(status().isNotFound());
@@ -96,8 +103,13 @@ public class PostControllerTest {
 
     @Test
     public void createPost() throws Exception {
-        Post post = new Post(1L,"제목","컨텐츠1","마크다운1", PostStatus.Y);
-        given(postService.createPost(any())).willReturn(post);
+        Post post = Post.builder()
+                .title("제목")
+                .content("컨텐츠")
+                .code("마크다운")
+                .status(PostStatus.Y)
+                .build();
+        given(postService.createPost(any(), any())).willReturn(post);
 
         this.mvc.perform(post("/posts")
                 .param("title", "제목1")
@@ -118,7 +130,12 @@ public class PostControllerTest {
 
     @Test
     public void modifyPost() throws Exception {
-        Post post = new Post(1L, "제목2", "컨텐츠2", "마크다운2", PostStatus.Y);
+        Post post = Post.builder()
+                .title("제목")
+                .content("컨텐츠")
+                .code("마크다운")
+                .status(PostStatus.Y)
+                .build();
         given(postService.updatePost(any(), any())).willReturn(post);
 
         this.mvc.perform(post("/posts/{id}/edit", 1L)

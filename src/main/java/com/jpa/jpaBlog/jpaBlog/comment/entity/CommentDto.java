@@ -1,5 +1,6 @@
 package com.jpa.jpaBlog.jpaBlog.comment.entity;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -13,4 +14,11 @@ public class CommentDto {
 
     @NotBlank
     private String content;
+
+    @Builder
+    public CommentDto(Long postId, String content) {
+        this.postId = postId;
+        this.content = content;
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.jpa.jpaBlog.jpaBlog.category;
 
 import com.jpa.jpaBlog.jpaBlog.category.entity.Category;
+import com.jpa.jpaBlog.jpaBlog.category.entity.CategoryDto;
 import com.jpa.jpaBlog.jpaBlog.category.service.CategoryService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,16 +41,31 @@ public class CategoryControllerTest {
 
     @Test
     public void categories() throws Exception {
-
-        List<Category> categories = Arrays.asList(new Category(1L, "spring"),
-                new Category(2L, "jpa"),
-                new Category(3L, "java"),
-                new Category(4L, "spring-boot"),
-                new Category(5L, "javascript")
+        List<Category> categories = Arrays.asList(
+                Category.builder()
+                        .id(1L)
+                        .name("spring")
+                        .build(),
+                Category.builder()
+                        .id(2L)
+                        .name("jpa")
+                        .build(),
+                Category.builder()
+                        .id(3L)
+                        .name("java")
+                        .build(),
+                Category.builder()
+                        .id(4L)
+                        .name("spring-boot")
+                        .build(),
+                Category.builder()
+                        .id(5L)
+                        .name("javascript")
+                        .build()
         );
 
-        Page<Category> categoryPage = new PageImpl<>(categories);
 
+        Page<Category> categoryPage = new PageImpl<>(categories);
         given(this.categoryService.findAll(anyObject())).willReturn(categoryPage);
         MvcResult mvcResult = this.mvc.perform(get("/categories"))
                 .andExpect(status().isOk())
@@ -78,7 +95,13 @@ public class CategoryControllerTest {
 
     @Test
     public void edit() throws Exception {
-        given(categoryService.findOne(anyLong())).willReturn(new Category(1L, "spring"));
+        given(categoryService.findOne(anyLong())).willReturn(
+                Category.builder()
+                        .id(1L)
+                        .name("spring")
+                        .build()
+        );
+
         MvcResult mvcResult = this.mvc.perform(get("/categories/{id}/edit", 1))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -90,8 +113,16 @@ public class CategoryControllerTest {
 
     @Test
     public void createCategory() throws Exception {
-        Category category = new Category(1L, "spring");
-        given(categoryService.createCategory(category)).willReturn(category);
+        CategoryDto categoryDto = CategoryDto.builder()
+                .id(1L)
+                .name("spring")
+                .build();
+        Category category = Category.builder()
+                .id(1L)
+                .name("spring")
+                .regDate(LocalDateTime.now())
+                .build();
+        given(categoryService.createCategory(categoryDto)).willReturn(category);
 
         this.mvc.perform(post("/categories")
                 .param("name", "spring"))

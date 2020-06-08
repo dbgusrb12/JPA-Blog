@@ -1,5 +1,6 @@
 package com.jpa.jpaBlog.jpaBlog.category.entity;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -11,4 +12,10 @@ public class CategoryDto {
 
     @NotBlank
     private String name;
+
+    @Builder
+    public CategoryDto(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }
