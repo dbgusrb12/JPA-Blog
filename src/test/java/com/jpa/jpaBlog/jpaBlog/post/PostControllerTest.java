@@ -1,5 +1,6 @@
 package com.jpa.jpaBlog.jpaBlog.post;
 
+import com.jpa.jpaBlog.core.security.SecurityConfig;
 import com.jpa.jpaBlog.jpaBlog.category.entity.Category;
 import com.jpa.jpaBlog.jpaBlog.category.service.CategoryService;
 import com.jpa.jpaBlog.jpaBlog.post.controller.PostController;
@@ -14,6 +15,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -32,7 +35,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(PostController.class)
+@WebMvcTest(controllers = PostController.class, excludeFilters = {
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)
+})
 @WithMockUser(username = "dbgusrb12")
 public class PostControllerTest {
 

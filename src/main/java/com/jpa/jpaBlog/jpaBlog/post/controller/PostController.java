@@ -2,6 +2,7 @@ package com.jpa.jpaBlog.jpaBlog.post.controller;
 
 import com.jpa.jpaBlog.core.config.Navigation;
 import com.jpa.jpaBlog.core.config.Section;
+import com.jpa.jpaBlog.core.exception.NotFoundException;
 import com.jpa.jpaBlog.jpaBlog.category.entity.Category;
 import com.jpa.jpaBlog.jpaBlog.category.service.CategoryService;
 import com.jpa.jpaBlog.jpaBlog.comment.entity.CommentDto;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +39,9 @@ public class PostController {
     @GetMapping("/{id}")
     public String findByPost(@PathVariable Long id, Model model, @ModelAttribute CommentDto commentDto) {
         Post post = postService.findByIdAndStatus(id, PostStatus.Y);
+        if(ObjectUtils.isEmpty(post)) {
+            throw new NotFoundException(id + " not found");
+        }
         model.addAttribute("post", post);
         return "post/post";
     }
@@ -49,7 +54,9 @@ public class PostController {
     @GetMapping("/edit/{id}")
     public String editPost(@PathVariable Long id, Model model) {
         Post post = postService.findByIdAndStatus(id, PostStatus.Y);
-
+        if(ObjectUtils.isEmpty(post)) {
+            throw new NotFoundException(id + " not found");
+        }
         PostDto createPost = PostDto.builder()
                 .categoryId(post.getCategory().getId())
                 .categoryName(post.getCategory().getName())

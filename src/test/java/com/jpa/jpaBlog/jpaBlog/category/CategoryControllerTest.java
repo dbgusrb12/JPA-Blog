@@ -1,14 +1,17 @@
 package com.jpa.jpaBlog.jpaBlog.category;
 
+import com.jpa.jpaBlog.core.security.SecurityConfig;
+import com.jpa.jpaBlog.jpaBlog.category.controller.CategoryController;
 import com.jpa.jpaBlog.jpaBlog.category.entity.Category;
 import com.jpa.jpaBlog.jpaBlog.category.entity.CategoryDto;
 import com.jpa.jpaBlog.jpaBlog.category.service.CategoryService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +25,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -31,9 +35,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+//@SpringBootTest
+//@AutoConfigureMockMvc
+@WebMvcTest(controllers = CategoryController.class, excludeFilters = {
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)
+})
 @WithMockUser(username = "dbgusrb12", roles = "ADMIN")
-@AutoConfigureMockMvc
 public class CategoryControllerTest {
 
     @Autowired
