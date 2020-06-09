@@ -31,7 +31,7 @@ public class GitProperties {
     }
 
     public static class Security {
-        private List<String> admins = Collections.singletonList("hyun gyu");
+        private List<String> admins = Collections.singletonList("dbgusrb12");
 
         public List<String> getAdmins() {
             return admins;

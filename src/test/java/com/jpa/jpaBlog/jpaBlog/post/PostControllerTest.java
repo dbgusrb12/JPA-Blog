@@ -1,30 +1,39 @@
 package com.jpa.jpaBlog.jpaBlog.post;
 
+import com.jpa.jpaBlog.jpaBlog.category.entity.Category;
+import com.jpa.jpaBlog.jpaBlog.category.service.CategoryService;
 import com.jpa.jpaBlog.jpaBlog.post.controller.PostController;
 import com.jpa.jpaBlog.jpaBlog.post.entity.Post;
 import com.jpa.jpaBlog.jpaBlog.post.entity.PostDto;
 import com.jpa.jpaBlog.jpaBlog.post.entity.PostStatus;
 import com.jpa.jpaBlog.jpaBlog.post.service.PostService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(PostController.class)
+@WithMockUser(username = "dbgusrb12")
 public class PostControllerTest {
 
     @Autowired
@@ -33,11 +42,25 @@ public class PostControllerTest {
     @MockBean
     private PostService postService;
 
+    @MockBean
+    private CategoryService categoryService;
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        given(categoryService.findAll())
+                .willReturn(Arrays.asList(Category.builder()
+                        .id(1L)
+                        .build()
+                        )
+                );
+    }
+
     @Test
     public void findByPost() throws Exception {
         given(this.postService.findByIdAndStatus(
                 anyLong(),
-                anyObject())).willReturn(
+                any())).willReturn(
                         Post.builder()
                                 .title("제목")
                                 .content("컨텐츠")
@@ -45,7 +68,7 @@ public class PostControllerTest {
                                 .status(PostStatus.Y)
                                 .build()
         );
-        MvcResult mvcResult = this.mvc.perform(get("/posts/{id}", 1))
+        MvcResult mvcResult = this.mvc.perform(get("/posts/{id}", 1).with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -58,7 +81,7 @@ public class PostControllerTest {
 
     @Test
     public void newPost() throws Exception {
-        this.mvc.perform(get("/posts/new"))
+        this.mvc.perform(get("/posts/new").with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("post/new"))
                 .andReturn();
@@ -66,16 +89,21 @@ public class PostControllerTest {
 
     @Test
     public void editPost() throws Exception {
-        given(this.postService.findByIdAndStatus(anyLong(), anyObject()))
-                .willReturn(
-                        Post.builder()
-                                .title("제목")
-                                .content("컨텐츠")
-                                .code("마크다운")
-                                .status(PostStatus.Y)
+        final Post value = Post.builder()
+                .title("제목")
+                .content("컨텐츠")
+                .code("마크다운")
+                .status(PostStatus.Y)
+                .category(
+                        Category.builder()
+                                .id(1L)
+                                .name("spring")
                                 .build()
-                );
-        MvcResult mvcResult = this.mvc.perform(get("/posts/edit/{id}", 1))
+                )
+                .build();
+        given(this.postService.findByIdAndStatus(anyLong(), any())).willReturn(value);
+
+        MvcResult mvcResult = this.mvc.perform(get("/posts/edit/{id}", 1).with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -97,13 +125,14 @@ public class PostControllerTest {
                             .status(PostStatus.Y)
                             .build()
         );
-        this.mvc.perform(get("/posts/edit/{id}", 2))
+        this.mvc.perform(get("/posts/edit/{id}", 2).with(csrf()))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void createPost() throws Exception {
         Post post = Post.builder()
+                .id(1L)
                 .title("제목")
                 .content("컨텐츠")
                 .code("마크다운")
@@ -111,18 +140,18 @@ public class PostControllerTest {
                 .build();
         given(postService.createPost(any(), any())).willReturn(post);
 
-        this.mvc.perform(post("/posts")
+        this.mvc.perform(post("/posts").with(csrf())
                 .param("title", "제목1")
                 .param("categoryId", "1")
                 .param("content", "컨텐츠1")
                 .param("code", "마크다운1"))
                 .andExpect(status().isFound())
-                .andExpect(header().string(HttpHeaders.LOCATION, "/posts/1"));
+                .andExpect(header().string(HttpHeaders.LOCATION, "/posts/1?navSection=Post"));
     }
 
     @Test
     public void createPostValid() throws Exception {
-        this.mvc.perform(post("/posts")
+        this.mvc.perform(post("/posts").with(csrf())
                 .param("title", "제목1")
                 .param("code", "마크다운1"))
                 .andExpect(view().name("post/new"));
@@ -131,6 +160,7 @@ public class PostControllerTest {
     @Test
     public void modifyPost() throws Exception {
         Post post = Post.builder()
+                .id(1L)
                 .title("제목")
                 .content("컨텐츠")
                 .code("마크다운")
@@ -138,21 +168,21 @@ public class PostControllerTest {
                 .build();
         given(postService.updatePost(any(), any())).willReturn(post);
 
-        this.mvc.perform(post("/posts/{id}/edit", 1L)
+        this.mvc.perform(post("/posts/{id}/edit", 1L).with(csrf())
                 .param("title", "제목2")
                 .param("categoryId", "1")
                 .param("content", "컨텐츠2")
                 .param("code", "마크다운2"))
                 .andExpect(status().isFound())
-                .andExpect(header().string(HttpHeaders.LOCATION, "/posts/1"));
+                .andExpect(header().string(HttpHeaders.LOCATION, "/posts/1?navSection=Post"));
     }
 
     @Test
     public void deletePost() throws Exception {
         doNothing().when(postService).deletePost(anyLong());
-        this.mvc.perform(post("/posts/{id}/delete", 1L))
+        this.mvc.perform(post("/posts/{id}/delete", 1L).with(csrf()))
                 .andExpect(status().isFound())
-                .andExpect(header().string(HttpHeaders.LOCATION, "/#/"));
+                .andExpect(header().string(HttpHeaders.LOCATION, "/?navSection=Post#/"));
     }
 
 }

@@ -1,11 +1,13 @@
 package com.jpa.jpaBlog.core.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.thymeleaf.dialect.springdata.SpringDataDialect;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,5 +29,10 @@ public class WebConfig implements WebMvcConfigurer {
                 }
             }
         });
+    }
+
+    @Bean
+    public SpringDataDialect springDataDialect() {
+        return new SpringDataDialect();
     }
 }

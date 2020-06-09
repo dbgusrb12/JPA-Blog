@@ -19,24 +19,19 @@ repositories {
 	mavenCentral()
 }
 
+ext {
+	set('springCloudVersion', "Hoxton.SR5")
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
-	// thymeleaf , layout, paging 처리 디펜던시
+	// thymeleaf, layout, paging, security 처리 디펜던시
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	compile group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '2.3.0'
 	compile group: 'io.github.jpenren', name: 'thymeleaf-spring-data-dialect', version: '3.4.0'
-	compile group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity5'
-
-
-	// 스프링 부트 시큐리티
-	implementation 'org.springframework.cloud:spring-cloud-starter-security:2.1.2.RELEASE'
-	implementation 'org.springframework.cloud:spring-cloud-starter-oauth2:2.1.2.RELEASE'
-
-
-
-
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 
 	// 캐시 디펜던시
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
@@ -61,17 +56,27 @@ dependencies {
 	implementation 'com.github.ben-manes.caffeine:jcache'
 
 //	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
+	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
 	// @ConfigurationProperties 어노테이션 쓰기 위한 디펜던시
-    compileOnly 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+	// 스프링 부트 시큐리티
+	implementation 'org.springframework.cloud:spring-cloud-starter-oauth2'
+	implementation 'org.springframework.cloud:spring-cloud-starter-security'
 
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
 	}
 }
 

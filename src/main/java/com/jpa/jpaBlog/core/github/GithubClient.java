@@ -1,7 +1,7 @@
 package com.jpa.jpaBlog.core.github;
 
 import com.jpa.jpaBlog.core.exception.NotFoundException;
-import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,12 +15,15 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @Service
-@RequiredArgsConstructor
 public class GithubClient {
 
     private final RestTemplate restTemplate;
 
     private final static String GIT_HUB_URL = "https://api.github.com";
+
+    public GithubClient(RestTemplateBuilder restTemplateBuilder) {
+        this.restTemplate = restTemplateBuilder.build();
+    }
 
     @Cacheable("github.user")
     public GithubUser getUser(String githubId) {

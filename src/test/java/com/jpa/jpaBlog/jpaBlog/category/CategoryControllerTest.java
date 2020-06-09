@@ -12,6 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -24,12 +25,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@WithMockUser(username = "dbgusrb12", roles = "ADMIN")
 @AutoConfigureMockMvc
 public class CategoryControllerTest {
 
@@ -66,8 +69,8 @@ public class CategoryControllerTest {
 
 
         Page<Category> categoryPage = new PageImpl<>(categories);
-        given(this.categoryService.findAll(anyObject())).willReturn(categoryPage);
-        MvcResult mvcResult = this.mvc.perform(get("/categories"))
+        given(this.categoryService.findAll(any())).willReturn(categoryPage);
+        MvcResult mvcResult = this.mvc.perform(get("/categories").with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -102,7 +105,7 @@ public class CategoryControllerTest {
                         .build()
         );
 
-        MvcResult mvcResult = this.mvc.perform(get("/categories/{id}/edit", 1))
+        MvcResult mvcResult = this.mvc.perform(get("/categories/{id}/edit", 1).with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -117,34 +120,36 @@ public class CategoryControllerTest {
                 .id(1L)
                 .name("spring")
                 .build();
-        Category category = Category.builder()
-                .id(1L)
-                .name("spring")
-                .regDate(LocalDateTime.now())
-                .build();
-        given(categoryService.createCategory(categoryDto)).willReturn(category);
 
-        this.mvc.perform(post("/categories")
+        given(categoryService.createCategory(categoryDto))
+                .willReturn(Category.builder()
+                        .id(1L)
+                        .name("spring")
+                        .regDate(LocalDateTime.now())
+                        .build()
+                );
+
+        this.mvc.perform(post("/categories").with(csrf())
                 .param("name", "spring"))
                 .andExpect(status().isFound())
-                .andExpect(header().string(HttpHeaders.LOCATION, "/categories"));
+                .andExpect(header().string(HttpHeaders.LOCATION, "/categories?navSection=Category"));
     }
 
     @Test
     public void modifyCategory() throws Exception {
         doNothing().when(categoryService).updateCategory(any());
 
-        this.mvc.perform(post("/categories/{id}/edit", 1L)
+        this.mvc.perform(post("/categories/{id}/edit", 1L).with(csrf())
                 .param("name", "spring-boot"))
                 .andExpect(status().isFound())
-                .andExpect(header().string(HttpHeaders.LOCATION, "/categories"));
+                .andExpect(header().string(HttpHeaders.LOCATION, "/categories?navSection=Category"));
     }
 
     @Test
     public void deleteCategory() throws Exception {
         doNothing().when(categoryService).delete(any());
-        this.mvc.perform(post("/categories/{id}/delete", 1L))
+        this.mvc.perform(post("/categories/{id}/delete", 1L).with(csrf()))
                 .andExpect(status().isFound())
-                .andExpect(header().string(HttpHeaders.LOCATION, "/categories"));
+                .andExpect(header().string(HttpHeaders.LOCATION, "/categories?navSection=Category"));
     }
 }

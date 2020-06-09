@@ -14,7 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.ArgumentMatchers.anyObject;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -42,7 +42,7 @@ public class CommentControllerTest {
                 .content("test")
                 .post(Post.builder().id(1L).build())
                 .build();
-        given(commentService.createComment(commentDto, anyObject())).willReturn(comment);
+        given(commentService.createComment(commentDto, any())).willReturn(comment);
 
         this.mvc.perform(post("/comments")
                 .param("postId", "1")
