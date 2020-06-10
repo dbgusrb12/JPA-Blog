@@ -1,7 +1,6 @@
-package com.jpa.jpaBlog.jpaBlog.comment;
+package com.jpa.jpaBlog.jpaBlog.comment.controller;
 
 import com.jpa.jpaBlog.core.security.SecurityConfig;
-import com.jpa.jpaBlog.jpaBlog.comment.controller.CommentController;
 import com.jpa.jpaBlog.jpaBlog.comment.entity.Comment;
 import com.jpa.jpaBlog.jpaBlog.comment.service.CommentService;
 import com.jpa.jpaBlog.jpaBlog.post.entity.Post;

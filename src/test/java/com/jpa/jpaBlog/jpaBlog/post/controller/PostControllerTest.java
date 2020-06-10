@@ -1,9 +1,8 @@
-package com.jpa.jpaBlog.jpaBlog.post;
+package com.jpa.jpaBlog.jpaBlog.post.controller;
 
 import com.jpa.jpaBlog.core.security.SecurityConfig;
 import com.jpa.jpaBlog.jpaBlog.category.entity.Category;
 import com.jpa.jpaBlog.jpaBlog.category.service.CategoryService;
-import com.jpa.jpaBlog.jpaBlog.post.controller.PostController;
 import com.jpa.jpaBlog.jpaBlog.post.entity.Post;
 import com.jpa.jpaBlog.jpaBlog.post.entity.PostDto;
 import com.jpa.jpaBlog.jpaBlog.post.entity.PostStatus;
@@ -26,7 +25,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;

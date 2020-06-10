@@ -1,7 +1,6 @@
-package com.jpa.jpaBlog.jpaBlog.category;
+package com.jpa.jpaBlog.jpaBlog.category.controller;
 
 import com.jpa.jpaBlog.core.security.SecurityConfig;
-import com.jpa.jpaBlog.jpaBlog.category.controller.CategoryController;
 import com.jpa.jpaBlog.jpaBlog.category.entity.Category;
 import com.jpa.jpaBlog.jpaBlog.category.entity.CategoryDto;
 import com.jpa.jpaBlog.jpaBlog.category.service.CategoryService;
@@ -35,8 +34,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
-//@SpringBootTest
-//@AutoConfigureMockMvc
 @WebMvcTest(controllers = CategoryController.class, excludeFilters = {
         @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)
 })
