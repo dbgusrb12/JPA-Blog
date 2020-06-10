@@ -53,8 +53,7 @@ public class CommentControllerTest {
         Post post = Post.builder()
                 .id(1L)
                 .build();
-        Optional<Post> newPost = Optional.of(post);
-        given(postRepository.findByIdAndStatus(anyLong(), any())).willReturn(newPost);
+        given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
     }
 
     @Test

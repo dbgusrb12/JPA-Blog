@@ -40,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = CategoryController.class, excludeFilters = {
         @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)
 })
-@WithMockUser(username = "dbgusrb12", roles = "ADMIN")
+@WithMockUser(username = "dbgusrb12")
 public class CategoryControllerTest {
 
     @Autowired
